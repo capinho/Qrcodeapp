@@ -28,3 +28,16 @@ jobs:
     - name: Run Tests
       run: |
         python manage.py test
+    - name: Update GitHub status
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const conclusion = ${{ job.status == 'success' ? 'success' : 'failure' }};
+          const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
+          octokit.checks.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            check_run_id: context.runId,
+            conclusion: conclusion,
+          });
