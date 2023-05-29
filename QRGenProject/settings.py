@@ -12,12 +12,13 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
-
+from decouple import config
+from dotenv import load_dotenv, find_dotenv
 import cloudinary_storage
 import environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,29 +29,26 @@ if DEBUG:
     MEDIA_ROOT = BASE_DIR / "media/"
 
     CLOUDINARY_STORAGE = {
-        "CLOUD_NAME": "drnxvi983",
-        "API_KEY": "154785378299453",
-        "API_SECRET": "AYj239Rq2CQRYwpOgXx5-_C1DZs",
+        "CLOUD_NAME": os.getenv("CLOUD_NAME"),
+        "API_KEY": os.getenv("API_KEY"),
+        "API_SECRET": os.getenv("API_SECRET"),
     }
-    SECRET_KEY = "sq%$17nusq%=f-g#1rl%7jn5u4*wexr6y7()mw=s85+g!+l-+)"
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
 else:
     MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    # CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp-production.up.railway.app','https://*.127.0.0.1']
 
     # CLOUDINARY
     CLOUDINARY_STORAGE = {
-        "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
-        #'CLOUD_NAME': 'drnxvi983',
-        "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
-        #'API_KEY': '154785378299453',
-        "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET")
-        #'API_SECRET': 'AYj239Rq2CQRYwpOgXx5-_C1DZs'
+        "CLOUD_NAME": os.getenv("CLOUD_NAME"),
+        "API_KEY": os.getenv("API_KEY"),
+        "API_SECRET": os.getenv("API_SECRET"),
     }
 
-    SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+    SECRET_KEY = os.getenv("SECRET_KEY")
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -84,7 +82,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
@@ -172,5 +169,3 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "/media/"
-
-# django_heroku.settings(locals())

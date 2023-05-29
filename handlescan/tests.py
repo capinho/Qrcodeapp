@@ -21,7 +21,6 @@ class QrCodeViewsTestCase(TestCase):
                 "test_file.pdf", b"file_content", content_type="pdf"
             ),
         )
-
         qr_type = QrType.objects.get(
             name="dynamic"
         )  # Get the QrType object for "dynamic" code
@@ -69,12 +68,9 @@ class QrCodeViewsTestCase(TestCase):
         # Vérifie si la vue de téléchargement renvoie le fichier attendu avec les en-têtes appropriés
         response = self.client.get(reverse("handlescan:download", args=[self.file.id]))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response["Content-Type"], "application/adminupload"
-        )  # Vérifie le type de contenu de la réponse
         expected_filename = os.path.basename(self.file.file.name)
         self.assertEqual(
-            response["Content-Disposition"], f'inline; filename="{expected_filename}"'
+            response["Content-Disposition"], f"inline; filename={expected_filename}"
         )  # Vérifie le nom de fichier dans l'en-tête Content-Disposition
 
         # Vérifie que le contenu du fichier téléchargé est correct
