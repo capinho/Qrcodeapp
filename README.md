@@ -1,5 +1,8 @@
 # QrGeneratorapp
 
+[![Build Status](https://github.com/capinho/Qrcodeapp/actions/workflows/django.yml/badge.svg)](https://github.com/capinho/Qrcodeapp/actions/workflows/django.yml)
+
+[![Coverage Status](https://coveralls.io/repos/github/capinho/Qrcodeapp/badge.svg?branch=main)](https://coveralls.io/github/capinho/Qrcodeapp?branch=main)
 
 ## Project Catalogue
 
