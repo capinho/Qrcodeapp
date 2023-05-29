@@ -17,6 +17,9 @@ from dotenv import load_dotenv, find_dotenv
 import cloudinary_storage
 import environ
 
+
+load_dotenv(find_dotenv())
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -39,7 +42,7 @@ else:
     MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp.fly.dev','https://*.127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = ["https://qrcodeapp.fly.dev", "https://*.127.0.0.1"]
 
     # CLOUDINARY
     CLOUDINARY_STORAGE = {
