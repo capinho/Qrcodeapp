@@ -25,7 +25,7 @@ jobs:
         CLOUD_NAME: ${{ secrets.CLOUD_NAME }}
         API_KEY: ${{ secrets.API_KEY }}
         API_SECRET: ${{ secrets.API_SECRET }}
-        SECRET_KEY: 'q%$17nusq%=f-g#1rl%7jn5u4*wexr6y7()mw=s85+g!+l-+)'
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
