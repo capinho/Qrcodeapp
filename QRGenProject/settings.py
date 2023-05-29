@@ -29,6 +29,7 @@ if DEBUG:
 #     MEDIA_ROOT = BASE_DIR / "media/"
     MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+    CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp.fly.dev','https://*.127.0.0.1']
 
     CLOUDINARY_STORAGE = {
         "CLOUD_NAME": os.getenv("CLOUD_NAME"),
@@ -41,7 +42,7 @@ else:
     MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    # CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp-production.up.railway.app','https://*.127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp.fly.dev','https://*.127.0.0.1']
 
     # CLOUDINARY
     CLOUDINARY_STORAGE = {
