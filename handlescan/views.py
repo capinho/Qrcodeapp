@@ -8,7 +8,6 @@ from qrgen.models import QrCode, File
 # for file download
 import urllib.request
 from urllib.parse import urlparse
-from django.core.files.storage import default_storage
 
 
 # Create your views here.
@@ -56,31 +55,17 @@ def dynamic_code_scan(request, code_id, *args, **kwargs):
             )
 
 
-# def download(request, file_id):
-#     file = File.objects.get(id=file_id)
-
-#     if file is not None:
-#         parse_url = urlparse(file.file.url)
-#         path = urllib.request.urlopen(file.file.url)
-#         response = HttpResponse(path.read(), content_type="application/adminupload")
-#         response["Content-Disposition"] = "inline;filename=" + os.path.basename(
-#             parse_url.path
-#         )
-#         return response
-#     else:
-#         return Http404
-
-
 def download(request, file_id):
     file = File.objects.get(id=file_id)
 
     if file is not None:
-        file_path = file.file.path
-        file_name = os.path.basename(file_path)
+        parse_url = urlparse(file.file.url)
+        path = urllib.request.urlopen(file.file.url)
+        response = HttpResponse(path.read(), content_type="application/adminupload")
+        response["Content-Disposition"] = "inline; filename=" + os.path.basename(
+            parse_url.path
+        )
 
-        with open(file_path, "rb") as f:
-            response = HttpResponse(f.read(), content_type="application/adminupload")
-            response["Content-Disposition"] = f'inline; filename="{file_name}"'
-            return response
+        return response
     else:
         return Http404
