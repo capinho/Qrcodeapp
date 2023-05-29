@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 
 
@@ -18,15 +19,20 @@ def Register(request):
         uname = request.POST.get('email')
         if User.objects.filter(username=uname).first():
             messages.error(
-                request, 'Email address already exist, register a new email address')
+                request, 'Email address already exists, register a new email address')
         else:
             new_user = User.objects.create_user(
                 username=uname, email=email, password=password)
             new_user.first_name = fname
             new_user.last_name = lname
-
             new_user.save()
+            
+            # Login the new user
             login(request, new_user)
+            
+            # Display success message
+            messages.success(request, 'Welcome to the dashboard')
+            
             return redirect('qrgen:dashboard')
 
     return render(request, 'accounts/register.html', {})
@@ -42,7 +48,7 @@ def Login(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('qrgen:dashboard')
+            return HttpResponseRedirect(reverse('qrgen:dashboard'))
         else:
             messages.success(
                 request, 'Email Address and Password do not exist')
