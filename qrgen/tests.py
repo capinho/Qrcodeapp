@@ -6,7 +6,8 @@ import os, shutil
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from qrgen.views import create_or_get_types
-import tempfile
+from urllib.request import urlopen
+from io import BytesIO
 
 
 class GenerationDashboardViewTestCase(TestCase):
@@ -68,11 +69,22 @@ class GenerationDashboardViewTestCase(TestCase):
             "qrcode_type": "static",
             "action_type": "pdf",
         }
-        with open("media/user_files/Documents_scannes.pdf", "rb") as file:
-            form_data["upload_file"] = file
-            response = self.client.post(
-                self.generate_url, form_data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
-            )
+        # Chemin vers le fichier à uploader
+        file_path = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/user_files/Documents_scannes.pdf"
+
+        # Télécharger le fichier depuis l'URL
+        response = urlopen(file_path)
+        file_content = response.read()
+
+        # Créer un fichier uploadé SimpleUploadedFile à partir du contenu du fichier
+        uploaded_file = SimpleUploadedFile(
+            "Documents_scannes.pdf", file_content, content_type="application/pdf"
+        )
+        form_data["upload_file"] = uploaded_file
+
+        response = self.client.post(
+            self.generate_url, form_data, HTTP_X_REQUESTED_WITH="XMLHttpRequest"
+        )
         self.assertEqual(response.status_code, 200)
         qrcode = QrCode.objects.last()
         self.assertEqual(qrcode.user, self.user)
@@ -81,8 +93,6 @@ class GenerationDashboardViewTestCase(TestCase):
         self.assertIsNone(qrcode.input_url)
         self.assertIsNotNone(qrcode.file)
         self.assertEqual(qrcode.file.name, "Documents_scannes.pdf")
-        # self.assertTrue(qrcode.file.url.startswith("/media/user_files/"))
-        # self.assertTrue(qrcode.file.url.endswith("/test.pdf"))
         self.assertEqual(
             qrcode.action_url, f"http://testserver/qrcode/download/{qrcode.file.id}"
         )
@@ -133,12 +143,18 @@ class EditQrCodeTestCase(TestCase):
 
     def test_edit_view_post_change_content_url(self):
         # Vérifier si le contenu d'un QR code est modifié avec succès lors d'une requête POST avec une URL
-        # Create a temporary image file for testing
-        with open("media/qrcodes/qrcode-1.png", "rb") as f:
-            image_content = f.read()
+        # Chemin vers le fichier image existant sur Cloudinary
+        existing_image_path = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/qrcodes/qrcode-1.png"
+
+        # Télécharger l'image depuis l'URL
+        response = urlopen(existing_image_path)
+        image_content = response.read()
+
+        # Créer un fichier image SimpleUploadedFile à partir du contenu de l'image
         image_file = SimpleUploadedFile(
-            "test_image.png", image_content, content_type="image/png"
+            "qrcode-1.png", image_content, content_type="image/png"
         )
+
         create_or_get_types()
         qr_type = QrType.objects.get(name="dynamic")
 
@@ -160,11 +176,16 @@ class EditQrCodeTestCase(TestCase):
     def test_edit_view_post_change_content_file(self):
         # Vérifier si le contenu d'un QR code est modifié avec succès lors d'une requête POST avec un fichier uploadé
 
-        # Create a temporary image file for testing
-        with open("media/qrcodes/qrcode-1.png", "rb") as f:
-            image_content = f.read()
+        # Chemin vers le fichier image existant sur Cloudinary
+        existing_image_path = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/qrcodes/qrcode-1.png"
+
+        # Télécharger l'image depuis l'URL
+        response = urlopen(existing_image_path)
+        image_content = response.read()
+
+        # Créer un fichier image SimpleUploadedFile à partir du contenu de l'image
         image_file = SimpleUploadedFile(
-            "test_image.png", image_content, content_type="image/png"
+            "qrcode-1.png", image_content, content_type="image/png"
         )
 
         create_or_get_types()
@@ -186,19 +207,6 @@ class EditQrCodeTestCase(TestCase):
         qrcode.refresh_from_db()
         self.assertIsNotNone(qrcode.file)
         self.assertEqual(qrcode.file.name, "new_file.pdf")
-        # self.assertTrue(os.path.exists(qrcode.file.path))
-
-    # def test_edit_view_post_change_title(self):
-    #     # Vérifier si le titre d'un QR code est modifié avec succès lors d'une requête POST
-    #     qrcode = QrCode.objects.create(user=self.user, title="Old Title")
-    #     form_data = {
-    #         "change_title": "true",
-    #         "new_title": "New Title",
-    #     }
-    #     response = self.client.post(self.edit_url, form_data)
-    #     self.assertRedirects(response, reverse("qrgen:dashboard"))
-    #     qrcode.refresh_from_db()
-    #     self.assertEqual(qrcode.title, "New Title")
 
 
 class DeleteQrCodeTestCase(TestCase):
@@ -233,22 +241,29 @@ class DeleteQrCodeTestCase(TestCase):
         self.assertFalse(QrCode.objects.filter(id=qrcode.id).exists())
 
     def test_delete_view_post(self):
-        # Create a temporary image file for testing
-        with open("media/qrcodes/qrcode-1.png", "rb") as f:
-            image_content = f.read()
+        # Chemin vers le fichier image existant sur Cloudinary
+        existing_image_path = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/qrcodes/qrcode-1.png"
+
+        # Télécharger l'image depuis l'URL
+        response = urlopen(existing_image_path)
+        image_content = response.read()
+
+        # Créer un fichier image SimpleUploadedFile à partir du contenu de l'image
         image_file = SimpleUploadedFile(
-            "test_image.png", image_content, content_type="image/png"
+            "qrcode-2.png", image_content, content_type="image/png"
         )
+
+        # Create a temporary QrCode object with the image file
         create_or_get_types()
         qr_type = QrType.objects.get(name="dynamic")
-
-        # Create a QrCode object with the temporary image file
         qrcode = QrCode.objects.create(user=self.user, type=qr_type, img=image_file)
 
         # Mettre à jour l'URL de suppression en utilisant l'ID de qrcode créé
         self.delete_url = reverse("qrgen:delete_qrcode", args=[qrcode.id])
+
         # Perform the delete request
         response = self.client.post(self.delete_url)
+
         # Assertions
         self.assertRedirects(response, reverse("qrgen:dashboard"))
 
@@ -271,28 +286,22 @@ class DownloadQrCodeTestCase(TestCase):
         )
 
     def test_download_view(self):
-        # Create a temporary image file for testing
-        with open("media/qrcodes/qrcode-1.png", "rb") as f:
-            image_content = f.read()
+        # Chemin vers le fichier image existant sur Cloudinary
+        existing_image_path = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/qrcodes/qrcode-1.png"
+
+        # Télécharger l'image depuis l'URL
+        response = urlopen(existing_image_path)
+        image_content = response.read()
+
+        # Créer un fichier image SimpleUploadedFile à partir du contenu de l'image
         image_file = SimpleUploadedFile(
-            "test_image.png", image_content, content_type="image/png"
+            "qrcode-1.png", image_content, content_type="image/png"
         )
+
+        # Create a temporary QrCode object with the image file
         create_or_get_types()
         qr_type = QrType.objects.get(name="dynamic")
-
-        # Create a QrCode object with the temporary image file
-        qrcode = QrCode.objects.create(
-            user=self.user,
-            title="Test QR Code",
-            type=qr_type,
-            img=image_file,
-        )
-
-        # Set up the temporary image file locally
-        temp_image_path = "temp/qrcodes/1/Test QR Code.png"
-        os.makedirs(os.path.dirname(temp_image_path), exist_ok=True)
-        with open(temp_image_path, "wb") as f:
-            f.write(image_content)
+        qrcode = QrCode.objects.create(user=self.user, type=qr_type, img=image_file)
 
         # Perform the download request
         response = self.client.get(self.download_url)
