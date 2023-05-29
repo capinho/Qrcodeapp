@@ -20,7 +20,8 @@ def about_page(request):
 
 def documentation(request):
     # extra context if any
-    return render(request, 'home/documentation_page.html', {'title': 'APU Documentation'})
+    return render(request, 'home/documentation_page.html', {'title': 'API Documentation'})
 
 def not_found(request, exception):
-    return render(request, '404.html', {'title': 'Page not found'})
+    return render(request, '404.html', {'title': 'Page not found'}, status=404)
+

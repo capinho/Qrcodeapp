@@ -15,8 +15,7 @@ from pathlib import Path
 from decouple import config
 from dotenv import load_dotenv, find_dotenv
 import cloudinary_storage
-
-load_dotenv(find_dotenv())
+import environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
