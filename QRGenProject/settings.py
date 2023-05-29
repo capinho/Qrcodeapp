@@ -18,7 +18,7 @@ import cloudinary_storage
 import environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,10 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 if DEBUG:
     # environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-#     MEDIA_ROOT = BASE_DIR / "media/"
-    MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
-    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-    CSRF_TRUSTED_ORIGINS = ['https://qrcodeapp.fly.dev','https://*.127.0.0.1']
+    MEDIA_ROOT = BASE_DIR / "media/"
 
     CLOUDINARY_STORAGE = {
         "CLOUD_NAME": os.getenv("CLOUD_NAME"),
