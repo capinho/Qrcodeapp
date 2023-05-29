@@ -14,9 +14,7 @@ import os
 from pathlib import Path
 
 import cloudinary_storage
-
 import environ
-import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
