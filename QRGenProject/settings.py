@@ -42,7 +42,7 @@ else:
     MEDIA_ROOT = "https://res.cloudinary.com/drnxvi983/image/upload/v1/media/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-    CSRF_TRUSTED_ORIGINS = ["https://qrcodeapp.fly.dev", "https://*.127.0.0.1"]
+    CSRF_TRUSTED_ORIGINS = ["https://qrcodeapp.fly.dev", "https://*.127.0.0.1","web-production-8c55.up.railway.app"]
 
     # CLOUDINARY
     CLOUDINARY_STORAGE = {
