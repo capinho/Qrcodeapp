@@ -13,6 +13,11 @@ jobs:
         API_KEY: ${{ secrets.API_KEY }}
         API_SECRET: ${{ secrets.API_SECRET }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        PGDATABASE: ${{ secrets.PGDATABASE }}
+        PGUSER: ${{ secrets.PGUSER }}
+        PGPASSWORD: ${{ secrets.PGPASSWORD }}
+        PGHOST: ${{ secrets.PGHOST }}
+        PGPORT: ${{ secrets.PGPORT }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
