@@ -52,6 +52,7 @@ else:
     }
 
     SECRET_KEY = os.getenv("SECRET_KEY")
+    
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
