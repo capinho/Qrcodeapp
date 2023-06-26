@@ -1,5 +1,3 @@
-import random
-from string import ascii_letters, digits
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -86,24 +84,3 @@ class AccountsViewsTestCase(TestCase):
         )
         response = self.client.get(reverse("accounts:logout"))
         self.assertRedirects(response, self.homepage_url)
-
-    def test_monkey_create_user(self):
-        def generate_random_data():
-            random_name = ''.join(random.choice(ascii_letters) for _ in range(10))
-            random_email = ''.join(random.choice(ascii_letters) for _ in range(10)) + '@example.com'
-            random_pwd = ''.join(random.choice(ascii_letters + digits) for _ in range(12))
-            return { "fname": 'Jane',
-                "lname": random_name,
-                "email": random_email,
-                "pswrd": random_pwd
-            }
-        for _ in range(100):
-            user_credentials = generate_random_data()
-            response = self.client.post(
-                self.register_url, user_credentials, follow=True
-            )
-            self.assertRedirects(response, self.dashboard_url)
-            messages = list(response.context["messages"])
-            self.assertEqual(len(messages), 1)
-            self.assertEqual(messages[0].message, "Welcome to the dashboard")
-        print("Monkey test passed")

@@ -10,10 +10,8 @@ django-prometheus==2.3.1
 elasticsearch==7.17.9
 elasticsearch-dsl==7.4.1
 idna==3.4
-mock==5.0.2
 Pillow==9.5.0
 prometheus-client==0.17.0
-psycopg2-binary==2.9.6
 pypng==0.20220715.0
 python-dateutil==2.8.2
 python-decouple==3.8
@@ -26,3 +24,5 @@ sqlparse==0.4.4
 typing_extensions==4.6.0
 urllib3==1.26.16
 whitenoise==6.4.0
+django-prometheus
+gunicorn
