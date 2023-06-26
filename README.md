@@ -4,6 +4,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/github/capinho/Qrcodeapp/badge.svg?branch=main)](https://coveralls.io/github/capinho/Qrcodeapp?branch=main)
 
+https://qrcodeapp.fly.dev/
+
 ## Project Catalogue
 
 - [Project Scope](#project-scope)
